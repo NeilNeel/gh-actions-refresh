@@ -1,0 +1,31 @@
+name: Branch Master Pipeline
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  run-py-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7.0.0
+      - name: Setup Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: '3.10'
+
+      - name: run the python script
+        if: github.ref_name == 'main'
+        env:
+          ENVIRONMENT: "production"
+        run: python app.py
+
+      - name: run python on develop branch
+        if: github.ref_name == 'develop'
+        env:
+          ENVIRONMENT: "staging"
+        run: python app.py
+    
