@@ -11,7 +11,7 @@ jobs:
       - name: create a build file
         run: echo "This is my compiled application binary!" > app.bin
       - name: upload artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v4
         with:
           name: app-binary
           path: app.bin
@@ -24,7 +24,7 @@ jobs:
     needs: build_job
     steps:
       - name: download artifact
-        uses: actions/download-artifact@v3.1.0
+        uses: actions/download-artifact@v4
         with:
           name: app-binary
       - name: read the artifact
