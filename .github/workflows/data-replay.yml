@@ -1,0 +1,33 @@
+name: Data Relay Race
+on:
+  workflow_dispatch:
+
+jobs:
+  build_job:
+    runs-on: ubuntu-latest
+    outputs:
+      app_version: ${{ steps.set_version.outputs.version }}
+    steps:
+      - name: create a build file
+        run: echo "This is my compiled application binary!" > app.bin
+      - name: upload artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: app-binary
+          path: app.bin
+      - name: set version output
+        id: set_version
+        run: echo "version=22.0.0" >> $GITHUB_OUTPUT
+
+  deploy-job:
+    runs-on: ubuntu-latest
+    needs: build_job
+    steps:
+      - name: download artifact
+        uses: actions/download-artifact@v3.1.0
+        with:
+          name: app-binary
+      - name: read the artifact
+        run: cat app.bin
+      - name: deploy the app version
+        run: echo "Deploying the app version ${{ needs.build_job.outputs.app_version }}"
